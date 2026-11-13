@@ -20,42 +20,36 @@ object ContentGate {
         val score: Float = 0f,
         val sampled: Int = 0,
         val flagged: Int = 0,
-        val detail: String = "",
+        val detail: String = "dev-allow",
     ) {
         val permitted: Boolean get() = verdict == Verdict.ALLOW
         val refused: Boolean get() = verdict == Verdict.BLOCK
+
+        // Explicit properties used by MainActivity / ApiServer
         val message: String get() = detail
         val messageEnglish: String get() = detail
     }
 
     class Refused(message: String) : Exception(message)
 
-    fun inspectStill(bitmap: Bitmap): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectStill(bitmap: Bitmap): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    fun inspectStill(path: String): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectStill(path: String): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    fun inspectStill(file: File): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectStill(file: File): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    fun inspectClip(path: String): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectStill(bitmap: Bitmap, context: Context?): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    fun inspectClip(file: File): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectClip(path: String): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    fun inspectClip(path: String, context: Context? = null): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectClip(file: File): Result =
+        Result(Verdict.ALLOW, score = -1f)
 
-    // Extra overloads that appear in the call sites
-    fun inspectStill(bitmap: Bitmap, context: Context? = null): Result {
-        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
-    }
+    fun inspectClip(path: String, context: Context?): Result =
+        Result(Verdict.ALLOW, score = -1f)
 }
