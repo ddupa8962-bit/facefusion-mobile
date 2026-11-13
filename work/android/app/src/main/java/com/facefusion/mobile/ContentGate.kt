@@ -1,36 +1,61 @@
 package com.facefusion.mobile
 
+import android.content.Context
+import android.graphics.Bitmap
+import java.io.File
+
 /**
- * Dev stub – content gate always permits.
- * This makes the build a proper -dev build without the NSFW filter.
+ * Dev stub – always allows. Removes the NSFW filter.
  */
 object ContentGate {
 
-    data class Verdict(
-        val permitted: Boolean,
+    const val THRESHOLD = 0.25f
+    const val VIDEO_RATE_PERCENT = 10.0
+    const val QUANTISED_BIAS = 0.087f
+
+    enum class Verdict { ALLOW, BLOCK, ERROR }
+
+    data class Result(
+        val verdict: Verdict,
         val score: Float = 0f,
-        val detail: String = ""
-    )
+        val sampled: Int = 0,
+        val flagged: Int = 0,
+        val detail: String = "",
+    ) {
+        val permitted: Boolean get() = verdict == Verdict.ALLOW
+        val refused: Boolean get() = verdict == Verdict.BLOCK
+        val message: String get() = detail
+        val messageEnglish: String get() = detail
+    }
 
     class Refused(message: String) : Exception(message)
 
-    fun check(bitmap: android.graphics.Bitmap): Verdict {
-        return Verdict(permitted = true)
+    fun inspectStill(bitmap: Bitmap): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
     }
 
-    fun check(path: String): Verdict {
-        return Verdict(permitted = true)
+    fun inspectStill(path: String): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
     }
 
-    fun checkFrame(bitmap: android.graphics.Bitmap): Verdict {
-        return Verdict(permitted = true)
+    fun inspectStill(file: File): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
     }
 
-    fun analyse(bitmap: android.graphics.Bitmap): Verdict {
-        return Verdict(permitted = true)
+    fun inspectClip(path: String): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
     }
 
-    fun isPermitted(bitmap: android.graphics.Bitmap): Boolean = true
+    fun inspectClip(file: File): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
+    }
 
-    fun isPermitted(path: String): Boolean = true
+    fun inspectClip(path: String, context: Context? = null): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
+    }
+
+    // Extra overloads that appear in the call sites
+    fun inspectStill(bitmap: Bitmap, context: Context? = null): Result {
+        return Result(Verdict.ALLOW, score = -1f, detail = "dev-allow")
+    }
 }
